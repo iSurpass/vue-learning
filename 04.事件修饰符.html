@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="width=derive-width,IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <style>
+        .inner{
+            height: 50px;
+            background-color: aquamarine
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="inner" @click="divHandler">
+            <input type="button" value="Pick Me" @click.stop="btnHandler">
+        </div>
+    </div>
+
+    <script>
+    var vm = new Vue({
+        el:'#app',
+        methods:{
+            divHandler:function(){
+                console.log("divHandler....")
+            },
+            btnHandler:function(){
+                console.log("btnHandler....")
+            }
+        }
+    })
+    </script>
+</body>
+</html>

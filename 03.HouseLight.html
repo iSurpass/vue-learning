@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="width=derive-width,IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <input type="button" value="稳住！" @click="wen">
+        <input type="button" value="走起！" @click="lang">
+        <h1 v-text="msg"></h1>
+    </div>
+
+    <script>
+        // 注意：在 VM 实例中想获取 data 中的数据或调用 methods 中的方法，必须通过 this. 关键字进行获取
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                msg:"火箭总冠军！不解释！",
+                intervalId: null,
+            },
+            methods:{
+                wen(){
+                    clearInterval(this.intervalId)
+                    this.intervalId = null;
+                },
+                lang(){
+                    if(this.intervalId != null){
+                        return;
+                    }
+                    var _this = this;
+                    // ES8 新写法: () = > {}  == function(){}
+                    this.intervalId = setInterval(() => {
+                    var start = _this.msg.substring(0,1);
+                    var end = _this.msg.substring(1);
+                    _this.msg = end + start; 
+                    },400)
+                }
+            }
+        })
+        // 注意：VM 实例会实时监听自己身上的 data 所有数据的变化，一旦发生变化，就会自动将最新数据同步渲染到页面中去。
+        //【好处】只需关心数据，不需要考虑如何重新渲染 DOM 页面
+    </script>
+</body>
+</html>
