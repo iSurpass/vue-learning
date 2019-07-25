@@ -15,11 +15,33 @@
 </head>
 <body>
 
+    <!-- 使用 .stop 阻止冒泡
     <div id="app">
         <div class="inner" @click="divHandler">
             <input type="button" value="Pick Me" @click.stop="btnHandler">
         </div>
+    </div> -->
+
+    <!-- 使用 .prevent 阻止默认行为 -->
+    <a href="http://www.baidu.com" @click.prevent="aHandler">Love</a>
+
+    <!-- 使用 .capture 捕获机制
+    <div id="app">
+            <div class="inner" @click.capture="divHandler">
+                <input type="button" value="Pick Me" @click="btnHandler">
+            </div>
+    </div> -->
+
+    <!-- 使用 .self 实现只有点击当前元素，才会触发事件 -->
+    <div id="app">
+            <div class="inner" @click.self="divHandler">
+                <input type="button" value="Pick Me" @click="btnHandler">
+            </div>
     </div>
+
+    <a href="http://www.baidu.com" @click.prevent.once="baiHandler">HOU</a>
+
+
 
     <script>
     var vm = new Vue({
@@ -30,6 +52,12 @@
             },
             btnHandler:function(){
                 console.log("btnHandler....")
+            },
+            aHandler:function(){
+                console.log("aHandler....")
+            },
+            baiHandler:function(){
+                console.log("baiHandler...")
             }
         }
     })

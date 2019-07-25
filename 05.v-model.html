@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="width=derive-width,IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+
+    <div id="app">
+
+        <!-- v-bind 只能实现实现数据的单向绑定，从 M 自动绑定到 V，无法实现数据的双向绑定 -->
+        <input type="text" v-bind:value="msg">
+        
+        <!-- v-model 可以实现 表单元素和 Model 中数据的双向数据绑定 -->
+        <!-- 注意: v-model 只能运用在 表单元素 中 -->
+        <!-- input(radio, text, address, email....) select checkbox textarea-->
+        <div>
+            <input type="text" v-model="msg">
+        </div>
+    </div>
+
+    
+
+    <script>
+    var vm = new Vue({
+        el:'#app',
+        data:{   
+            msg:"Juniors"
+        }
+    })
+    </script>
+</body>
+</html>

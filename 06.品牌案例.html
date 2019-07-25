@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="width=derive-width,IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
+</head>
+<body>
+
+    <div id="app">
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" v-color="'1000'" v-size="'40'">品牌案例</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label>
+                    Id:
+                    <input type="text" class="form-control" v-model="id">
+                </label>
+
+                <label>
+                        Name:
+                        <input type="text" class="form-control" v-model="name" @keyup.enter="skr">
+                </label>
+
+                <input type="button" value="添加" class="btn btn-primary" @click="skr()">
+
+                <label>
+                        Search:
+                        <input type="text" class="form-control" v-model="keywords" id="search" v-focus v-color="'green'">
+                </label>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in search(keywords)" :key="item.id">
+                    <td v-color="'500'">{{ item.id | privateFormat}}</td>
+                    <td v-text="item.name"></td>
+                    <td v-color="'500'">{{ item.ctime | dateFormat('')}}</td>
+                    <td><a href="" @click.prevent="delete(item.id)">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <script>
+
+//--> 全局过滤器，进行时间的格式化
+    Vue.filter("timeFormat",function(date){
+
+        // 根据给定的时间字符串，得到特定的时间
+        var dt = new Date(date);
+
+        // yyyy-mm-dd
+        var y = dt.getFullYear();
+        var m = dt.getMonth() + 1;
+        var d = dt.getDate()
+
+        // return y + '-' + m + '-' + 'd'
+        return `${y}-${m}-${d}`;
+    })
+
+//--> 自定义全局按键修饰符
+    Vue.config.keyCodes.f2 = 113;
+
+//--> 使用 Vue.directive() 定义全局的指令 v-focus 
+
+    // 其中: 参数1: 指令名称，注意，在定义的时候，指令的名称前面，不需要加 v- 前缀
+    // 但是：在调用的时候，必须在指令的名称前加 v- 前缀进行调用
+    Vue.directive('focus',{
+
+    // 注意在每个函数中，第一个参数永远是 el,表示被绑定了指令的那个元素，简单来说这个 el 参数就是一个原生的JS对象
+
+        bind:function(el){    //每当指令绑定到元素上的时候，会立即执行这个 bind 函数，只执行一次
+            // 在元素刚绑定了指令的时候，还没有插入到 DOM 中去，这时候 focus 没有作用
+            // el.focus()
+        },
+
+        // 和 JS 行为有关的操作，最好在 inserted 中执行,防止 JS 行为 不生效
+        inserted:function(el){    // 表示元素插入到 DOM 中的时候，会执行 inserted 函数
+            el.focus()
+        },
+        updated:function(el){     // 当 VNode 更新的时候，会执行 updated，可能会触发多次
+
+        }
+    });
+
+    Vue.directive('color',{
+
+        // 和样式相关的操作，一般在 bind 中设置
+        bind:function(el,binding){
+            // el.style.color='red';
+
+            // binding.name:自定义函数名
+            // binding.value:自定义函数参数
+            // binding.expression:自定义函数原表达式
+            el.style.color = binding.value;
+        }
+    })
+
+    var vm = new Vue({
+        el:'#app',
+        data:{   
+            id:'',
+            name:'',
+            list:[
+                {id:1, name:'奔驰', ctime:new Date()},
+                {id:2, name:'奥德赛', ctime:new Date()},
+                {id:3, name:'大众CC', ctime:new Date()},
+            ],
+            keywords:'',
+        },
+        methods:{
+            skr(){
+                var car = {id: this.id, name:this.name, ctime:new Date()};
+                this.list.push(car);
+                this.id = this.name = '';
+            },
+            delete(id){
+                // 方法一:通过 some 索引 list
+                // this.list.some((item,i)=>{
+                //     if(item.id == id){
+                //         this.list.splice(i,1);
+                //         return true;
+                //     }
+                // }) 
+
+                // 方法二:通过 findIndex 索引 list
+                var index = this.list.findIndex(item => {
+                    if(item.id == id){
+                        return true;
+                    }
+                });
+                console.log("123")
+                this.list.splice(index,1);
+            },
+            search(keywords){
+
+                // foreach some filter findIndex 这些都属于数组的新方法
+
+                // 方法一:findIndex()
+                // var newList = [];
+                // this.list.forEach(element => {
+                //     if(element.name.indexOf(keywords) != -1){
+                //         newList.push(element);
+                //     }
+                // });
+                // return newList;
+
+                // 方法二:filter()
+                return this.list.filter(item => {
+                    if(item.name.includes(keywords)){
+                        return item;
+                    }
+                });
+            },
+        },
+//-->   定制私有过滤器
+        // 在过滤器调用时，如果全局与私有过滤器重名，优先私有过滤器
+        filters:{
+            privateFormat:function(msg){
+                return msg + " By Juniors";
+            },
+            dateFormat: function(date, pattern = ''){
+                // 根据给定的时间字符串，得到特定的时间
+                var dt = new Date(date);
+
+                // yyyy-mm-dd
+                var y = dt.getFullYear();
+
+                // 注意: String.padStart(位数,替换的字符)
+
+                var m = (dt.getMonth() + 1).toString().padStart(2,'0');
+                var d = dt.getDate().toString().padStart(2,'0');
+
+                // return y + '-' + m + '-' + 'd'
+                if(pattern.toLowerCase() === 'yyyy-mm-dd')
+                    return `${y}-${m}-${d}`;
+                else{
+                    var hh = dt.getHours().toString().padStart(2,'0');
+                    var mm = dt.getMinutes().toString().padStart(2,'0');
+                    var ss = dt.getSeconds().toString().padStart(2,'0');
+
+                    return `${y}-${m}-${d} ${hh}-${mm}-${ss}`;
+                }
+            }
+        },
+        directives:{
+                'color':{
+                    bind:function(el,binding){
+                        el.style.fontWeight = binding.value;
+                    }
+                },
+                'size':function(el,binding){
+                    el.style.fontSize = parseInt(binding.value) + 'px';
+                }
+            }
+    })
+    </script>
+</body>
+</html>
