@@ -12,9 +12,17 @@
 
     <div id="app">
         <button type="button" class="btn btn-primary" @click="getInfo">Pick</button>
+        <my-com></my-com>
     </div>
 
     <script>
+
+    var com = Vue.extend({
+        template:'<h1>RunAsOne</h1>'
+    })
+
+    Vue.component('myCom',com);
+
     var vm = new Vue({
         el:'#app',
         data:{},
