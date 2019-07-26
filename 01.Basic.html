@@ -11,6 +11,7 @@
 <body>
 
     <!-- 将来 new 的 Vue 实例，会控制这个元素中的所有内容 -->
+    <!-- Vue 实例所控制的元素区域 = V (MVVM)-->
     <div id="app">
         <p>{{ msg }}</p>
     </div>
@@ -20,8 +21,10 @@
     <script>
     // 2.创建一个 Vue 实例
     // 当我们导入包之后，在浏览器的内存中就多了一个 Vue 构造函数
+    //  注意：我们 new 出来的 vm 对象 = VM (MVVM) 
     var vm = new Vue({
         el:'#app', // 表示当前我们 new 的这个 Vue 实例所要控制页面上的哪个区域
+        // 这里的 data = M (MVVM) 专门来保存页面的数据
         data:{     // data 属性中，存放的是 el 中所用到的数据
             msg: 'Welcom to learn Vue!' // 只需要对数据的设置，就很方便的把数据渲染到页面上，我们不再去繁琐地操作 DOM 元素了
         }
