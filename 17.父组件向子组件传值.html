@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 父组件可以在引用子组件的时候，通过 属性绑定(v-bind:)形式，把需要传递给子组件的数据
+        以属性绑定的形式，传递到子组件内部，供子组件使用 -->
+        <com1 v-bind:parentsmsg='msg'>
+            <button @fuc='show'>fafa</button>
+        </com1>
+    </div>
+    <script>
+        var vm=new Vue({
+           el:'#app',
+           data:{
+                msg:'Run As One!'
+            },
+           methods:{
+                show(){
+                    console.log("子组件调用父组件函数")
+                }
+            },
+            components:{
+                // 注意:子组件中默认无法访问到父组件中的 data/methods
+                com1:{
+                    template:'<h1>这是子组件 --- {{ parentsmsg }}</h1>',
+                    // 把父组件传递过来的 parentsmsg 属性，先在 props 数组中定义，才能使用这个数据
+                    // 组件中所有的 props 中的数据，都是通过父组件传递给子组件的
+                    props:['parentsmsg'],   // props 数据:只读不可写
+                    directives:{},
+                    fliters:{}
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

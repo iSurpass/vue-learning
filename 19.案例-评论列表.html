@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./lib/vue-2.4.0.js"></script>
+    <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
+</head>
+
+<body>
+    <div id="app">
+        <com1 @fuc="loadComments"></com1>
+        <ul class="list-group">
+            <li class="list-group-item" v-for="item in list" :key="item.id">
+                <span class="badge">评论人: {{ item.user }}</span>
+                    {{ item.content }}
+            </li>
+        </ul>
+        
+    </div>
+
+
+    <template id="temp1">
+        <div>
+            <div class="form-group">
+                <label>评论人:</label>
+                <input type="text" class="form-control" v-model="user">
+            </div>
+            <div class="form-group">
+                <label>评论内容:</label>
+                <input type="text" class="form-control" v-model="content">
+            </div>
+            <div class="form-group">
+                    <input type="button" value="发表" class="btn btn-primary" @click="post">
+                </div>
+        </div>
+    </template>
+
+    <script>
+
+        var comBox = {
+            template:'#temp1',
+            data(){
+                return {
+                    user : '',
+                    content : ''
+                }
+            },
+            methods:{
+                post(){
+
+                    var cmt = {id:Date.now(),user:this.user,content:this.content};
+                    var cmts = JSON.parse(localStorage.getItem('cmts') || '[]');
+                    cmts.unshift(cmt);
+                    localStorage.setItem('cmts',JSON.stringify(cmts));
+                    this.user=this.content=''
+
+                    this.$emit('fuc')
+                }
+            }
+        }
+
+
+        var vm=new Vue({
+           el:'#app',
+           data:{
+                list:[
+                    {id:Date.now(),user:'Juniors',content:'Run As One!'},
+                    {id:Date.now(),user:'Harden',content:'JJ HH ll!'},
+                    {id:Date.now(),user:'James',content:'Bouns Youth!'},
+                ]
+            },
+            created(){
+                this.loadComments()
+            },
+            methods:{
+                loadComments(){
+                    var list = JSON.parse(localStorage.getItem('cmts') || '[]');
+                    this.list = list;
+                }
+            },
+            components:{
+                com1:comBox,
+            }
+        });
+    </script>
+</body>
+
+</html>
