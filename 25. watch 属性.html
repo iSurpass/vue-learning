@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="frist"> +
+        <input type="text" v-model="last"> =
+        <input type="text" v-model="full">
+    </div>
+    <script>
+        var vm=new Vue({
+           el:'#app',
+           data:{
+                frist:'',
+                last:'',
+                full:''
+            },
+           methods:{
+                // getfullname(){
+                //     this.full = this.frist + ' - ' + this.last
+                // }
+            },
+            watch:{
+                'frist' : function(newVal, oldVal){
+                    this.full = newVal + '---' + this.last
+                },
+                'last' : function(newVal){
+                    this.full = this.frist + '---' + newVal
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
